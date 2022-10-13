@@ -35,6 +35,11 @@
         font-weight: 600;
       "
     >
+      <div
+        style="color:#e13750; font-size: 18px;margin-bottom:8px;font-weight: 600;"
+      >
+        {{ getPrice }}
+      </div>
       {{ goodInfo.name }}
     </div>
     <div
@@ -68,7 +73,7 @@ import axios from "axios";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Autoplay } from "swiper";
 
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, reactive } from "vue";
 import "swiper/css";
 const modules = ref([Autoplay]);
 const callLib = new CallApp({
@@ -93,7 +98,20 @@ const detailImgList = computed(() => {
   return goodInfo.value.detail || [];
 });
 const lang = ref("cn");
+
 const goodInfo = ref({});
+
+const getPrice = computed(() => {
+  let price = goodInfo.value.origin_price;
+  if (goodInfo.value.goods_level === 0) {
+    price = goodInfo.value.origin_price;
+  } else if (goodInfo.value.goods_level === 1) {
+    price = goodInfo.value.discount_price;
+  } else if (goodInfo.value.goods_level === 2) {
+    price = goodInfo.value.vip_price;
+  }
+  return '€ '+(price / 100).toFixed(2);
+});
 
 onMounted(() => {
   // cn/en/italy
