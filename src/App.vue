@@ -36,7 +36,12 @@
       "
     >
       <div
-        style="color:#e13750; font-size: 18px;margin-bottom:8px;font-weight: 600;"
+        style="
+          color: #e13750;
+          font-size: 18px;
+          margin-bottom: 8px;
+          font-weight: 600;
+        "
       >
         {{ getPrice }}
       </div>
@@ -64,7 +69,7 @@
         />
       </template>
     </div>
-    <div class="download_btn" @click="handleClick">app内查看</div>
+    <div class="download_btn" @click="handleClick">{{ getAppText }}</div>
   </div>
 </template>
 <script setup>
@@ -99,6 +104,14 @@ const detailImgList = computed(() => {
 });
 const lang = ref("cn");
 
+const TEXT_MAP = {
+  cn: "APP内查看",
+  italy: "Guarda nell’App",
+};
+const getAppText = computed(() => {
+  return TEXT_MAP[lang.value];
+});
+
 const goodInfo = ref({});
 
 const getPrice = computed(() => {
@@ -110,7 +123,7 @@ const getPrice = computed(() => {
   } else if (goodInfo.value.goods_level === 2) {
     price = goodInfo.value.vip_price;
   }
-  return '€ '+(price / 100).toFixed(2);
+  return "€ " + (!isNaN(price) ? (price / 100).toFixed(2) : "");
 });
 
 onMounted(() => {
@@ -120,7 +133,7 @@ onMounted(() => {
   const goodsParam = params[0] || "";
   const langParam = params[1] || "cn";
   const goods_id = goodsParam.split("=")[1] || "";
-  lang.value = langParam.split("=")[1] || "";
+  lang.value = langParam.split("=")[1] || "cn";
   const instance = axios.create({
     timeout: 60 * 1000,
     headers: {
@@ -157,9 +170,10 @@ onMounted(() => {
   text-align: center;
   transform: translateX(-50%);
   border-radius: 30px;
-  width: 150px;
-  height: 50px;
-  line-height: 50px;
+  /* width: 150px; */
+  padding: 8px 16px;
+  /* height: 50px;
+  line-height: 50px; */
   background-color: #e13750;
   color: white;
   box-shadow: 2px 2px 10px #00000080;
